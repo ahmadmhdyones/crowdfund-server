@@ -16,7 +16,7 @@ const importData = async () => {
 
     const adminUser = createdUsers[0]._id;
 
-    console.log('✅ Data Imported!'.green.inverse);
+    console.log('✅ Data Imported!'.green);
     process.exit();
   } catch (error) {
     console.error(`🛑 Error! ${error.message.bold}`.red.inverse, error);
@@ -28,7 +28,7 @@ const destroyData = async () => {
   try {
     await User.deleteMany();
 
-    console.log('⭕ Data Destroyed!'.red.inverse);
+    console.log('⭕ Data Destroyed!'.red);
     process.exit();
   } catch (error) {
     console.error(`🛑 Error! ${error.message.bold}`.red.inverse, error);

@@ -8,9 +8,9 @@ const connectDB = async () => {
       useUnifiedTopology: true,
       useNewUrlParser: true
     })
-    .then((con) => {
+    .then((conn) => {
       console.log(
-        `✅ DB connection successful with host ${con.connection.host.bold}`
+        `✅ DB connection successful with host ${conn.connection.host.bold}`
           .green.inverse
       );
     })
