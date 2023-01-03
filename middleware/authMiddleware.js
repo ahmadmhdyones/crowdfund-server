@@ -39,4 +39,17 @@ const admin = (req, res, next) => {
   }
 };
 
+const consultant = (req, res, next) => {
+  if (req.user && req.user.isConsultant) {
+    next();
+  } else {
+    res.status(401);
+    res.json({
+      status: 'error',
+      message: 'Not authorized as a feasibility account'
+    });
+    throw new Error('Not authorized as a feasibility account');
+  }
+};
+
 export { protect, admin };
