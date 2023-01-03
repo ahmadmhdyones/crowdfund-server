@@ -32,7 +32,7 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Register a new user
-// @route   POST /users
+// @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -114,6 +114,16 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       user.password = req.body.password;
     }
 
+    const userExists = await User.findOne({ email: req.body.email });
+    if (userExists) {
+      res.status(400);
+      res.json({
+        status: 'error',
+        message: 'User already exists with that email'
+      });
+      throw new Error('User already exists with that email');
+    }
+
     const updatedUser = await user.save();
 
     res.json({
@@ -152,7 +162,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
   if (user) {
     await user.remove();
-    res.status(204);
+    res.status(204).json();
   } else {
     res.status(404);
     res.json({ status: 'error', message: 'User not found' });
@@ -164,14 +174,20 @@ const deleteUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Private/Admin
 const getUserById = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password');
+  try {
+    const user = await User.findById(req.params.id).select('-password');
 
-  if (user) {
-    res.json({ status: 'success', data: { user } });
-  } else {
-    res.status(404);
-    res.json({ status: 'error', message: 'User not found' });
-    throw new Error('User not found');
+    if (user) {
+      res.json({ status: 'success', data: { user } });
+    } else {
+      res.status(404);
+      res.json({ status: 'error', message: 'User not found' });
+      throw new Error('User not found');
+    }
+  } catch (err) {
+    res.status(400);
+    res.json({ status: 'error', message: err.message });
+    throw new Error(err.message);
   }
 });
 
@@ -186,6 +202,16 @@ const updateUser = asyncHandler(async (req, res) => {
     user.email = req.body.email || user.email;
     user.isAdmin = req.body.isAdmin;
     user.isConsultant = req.body.isConsultant;
+
+    const userExists = await User.findOne({ email: req.body.email });
+    if (userExists) {
+      res.status(400);
+      res.json({
+        status: 'error',
+        message: 'User already exists with that email'
+      });
+      throw new Error('User already exists with that email');
+    }
 
     const updatedUser = await user.save();
 
