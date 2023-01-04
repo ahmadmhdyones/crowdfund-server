@@ -8,13 +8,18 @@ import cors from 'cors';
 dotenv.config({ path: './.env' });
 
 const app = express();
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: '*',
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200
 };
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(router);
 
