@@ -49,10 +49,10 @@ const consultant = (req, res, next) => {
     res.status(401);
     res.json({
       status: 'error',
-      message: 'Not authorized as a feasibility account'
+      message: 'Not authorized as a consultant'
     });
-    throw new Error('Not authorized as a feasibility account');
+    throw new Error('Not authorized as a consultant');
   }
 };
 
-export { protect, admin };
+export { protect, admin, consultant };
