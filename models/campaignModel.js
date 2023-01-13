@@ -100,7 +100,7 @@ const campaginSchema = new mongoose.Schema(
     },
     state: {
       type: String,
-      enum: ['pending', 'approved', 'rejected', 'deployed', 'canceled'],
+      enum: ['pending', 'approved', 'rejected', 'deployed'],
       required: false,
       default: 'pending'
     }
