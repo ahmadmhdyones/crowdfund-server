@@ -218,8 +218,8 @@ const getMyCampaigns = asyncHandler(async (req, res) => {
   res.json({ status: 'success', total: campaigns.length, data: { campaigns } });
 });
 
-// @desc    Update campaign to be deployed (add address)
-// @route   PATCH /api/campaigns/deployed
+// @desc    Deploy campaign to be deployed (add address)
+// @route   POST /api/campaigns/deployed
 // @access  Private
 const deployCampaign = asyncHandler(async (req, res) => {
   const campaign = await Campaign.findById(req.body.id);

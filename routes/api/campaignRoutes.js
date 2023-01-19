@@ -8,13 +8,17 @@ import {
   getConsultationCampains,
   getConsultationCampainById,
   updateCampaignApproval,
-  getMyCampaigns
+  getMyCampaigns,
+  deployCampaign
 } from '../../controllers/campaignController.js';
 import { protect, admin, consultant } from '../../middleware/authMiddleware.js';
 
 const router = Router();
 
-router.get('/deployed', getDeployedCampaigns);
+router
+  .route('/deployed')
+  .get(getDeployedCampaigns)
+  .post(protect, deployCampaign);
 router.get('/deployed/:id', getDeployedCampaignById);
 
 router.get('/consultation', protect, consultant, getConsultationCampains);
