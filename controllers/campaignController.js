@@ -218,6 +218,50 @@ const getMyCampaigns = asyncHandler(async (req, res) => {
   res.json({ status: 'success', total: campaigns.length, data: { campaigns } });
 });
 
+// @desc    Update campaign to be deployed (add address)
+// @route   PATCH /api/campaigns/deployed
+// @access  Private
+const deployCampaign = asyncHandler(async (req, res) => {
+  const campaign = await Campaign.findById(req.body.id);
+
+  if (campaign) {
+    if (campaign.state !== 'approved') {
+      res.status(400);
+      res.json({
+        status: 'error',
+        message: `Not allowed, campaign is already ${campaign.state}`
+      });
+      throw new Error(`Not allowed, campaign is already ${campaign.state}`);
+    }
+
+    if (campaign.user._id !== req.user._id) {
+      res.status(403);
+      res.json({
+        status: 'error',
+        message: 'Not allowed, premission denied'
+      });
+      throw new Error('Not allowed, premission denied');
+    }
+
+    const address = req.body.address;
+    campaign.address = address;
+    campaign.state = 'deployed';
+
+    try {
+      const updatedCampaign = await campaign.save();
+      res.json({ status: 'success', data: { campaign: updatedCampaign } });
+    } catch (err) {
+      res.status(400);
+      res.json({ status: 'error', message: err.message });
+      throw new Error(err.message);
+    }
+  } else {
+    res.status(404);
+    res.json({ status: 'error', message: 'Campaign not found' });
+    throw new Error('Campaign not found');
+  }
+});
+
 export {
   addCampaign,
   getDeployedCampaigns,
@@ -227,5 +271,6 @@ export {
   getConsultationCampains,
   getConsultationCampainById,
   updateCampaignApproval,
-  getMyCampaigns
+  getMyCampaigns,
+  deployCampaign
 };

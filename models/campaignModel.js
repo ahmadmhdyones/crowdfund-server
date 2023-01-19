@@ -44,6 +44,11 @@ const campaginSchema = new mongoose.Schema(
       required: true,
       ref: 'User'
     },
+    address: {
+      type: String,
+      required: false,
+      default: null
+    },
     name: {
       type: String,
       required: true
