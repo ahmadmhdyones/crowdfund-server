@@ -72,8 +72,9 @@ const getMyContributions = asyncHandler(async (req, res) => {
   const contributions = await Contribution.find({
     user: req.user._id
   })
-    .populate(['contributor'])
-    .populate('campaign', 'user name title description goal pledged');
+    // .populate(['contributor', 'campaign']) // get contributor and campaign documents
+    // .populate('campaign', 'user name title description goal pledged'); // get specific field in campaign document
+    .populate('campaign');
 
   res.json({
     status: 'success',
