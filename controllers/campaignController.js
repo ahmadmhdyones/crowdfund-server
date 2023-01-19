@@ -72,7 +72,7 @@ const getDeployedCampaignById = asyncHandler(async (req, res) => {
 
 // @desc    Get all campaigns
 // @route   GET /api/campaigns
-// @access  Private/Admin
+// @access  Public
 const getCampaigns = asyncHandler(async (req, res) => {
   const state = req.query.state;
   let campaigns = [];
@@ -88,7 +88,7 @@ const getCampaigns = asyncHandler(async (req, res) => {
 
 // @desc    Get campaign by ID
 // @route   GET /api/campaigns/:id
-// @access  Private/Admin
+// @access  Public
 const getCampaignById = asyncHandler(async (req, res) => {
   const campaign = await Campaign.findById(req.params.id).populate(
     'user',

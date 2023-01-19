@@ -25,7 +25,7 @@ router
 
 router.get('/mine', protect, getMyCampaigns);
 
-router.route('/').post(protect, addCampaign).get(protect, admin, getCampaigns);
-router.route('/:id').get(protect, admin, getCampaignById);
+router.route('/').post(protect, addCampaign).get(protect, getCampaigns);
+router.route('/:id').get(protect, getCampaignById);
 
 export default router;
