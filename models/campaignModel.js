@@ -76,6 +76,12 @@ const campaginSchema = new mongoose.Schema(
       default: 0,
       min: [0, 'Should not be negative, got {VALUE}']
     },
+    contributors: {
+      type: Number,
+      required: false,
+      default: 0,
+      min: [0, 'Should not be negative, got {VALUE}']
+    },
     startAt: {
       type: Date,
       required: function () {

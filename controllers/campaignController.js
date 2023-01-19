@@ -141,8 +141,6 @@ const getConsultationCampainById = asyncHandler(async (req, res) => {
     'name email'
   );
 
-  console.log(campaign.state);
-
   if (campaign) {
     if (
       campaign.state !== 'pending' &&
@@ -225,6 +223,15 @@ const deployCampaign = asyncHandler(async (req, res) => {
   const campaign = await Campaign.findById(req.body.id);
 
   if (campaign) {
+    if (!campaign.user._id.equals(req.user.id)) {
+      res.status(403);
+      res.json({
+        status: 'error',
+        message: 'Not allowed, premission denied'
+      });
+      throw new Error('Not allowed, premission denied');
+    }
+
     if (campaign.state !== 'approved') {
       res.status(400);
       res.json({
@@ -234,18 +241,10 @@ const deployCampaign = asyncHandler(async (req, res) => {
       throw new Error(`Not allowed, campaign is already ${campaign.state}`);
     }
 
-    if (campaign.user._id !== req.user._id) {
-      res.status(403);
-      res.json({
-        status: 'error',
-        message: 'Not allowed, premission denied'
-      });
-      throw new Error('Not allowed, premission denied');
-    }
-
     const address = req.body.address;
     campaign.address = address;
     campaign.state = 'deployed';
+    campaign.startAt = new Date();
 
     try {
       const updatedCampaign = await campaign.save();

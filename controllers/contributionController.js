@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import Campagin from '../models/campaignModel.js';
+import Campaign from '../models/campaignModel.js';
 import Contribution from '../models/contributionModel.js';
 
 // @desc    Funding campaign
@@ -7,7 +7,7 @@ import Contribution from '../models/contributionModel.js';
 // @access  Private
 const fundCampaign = asyncHandler(async (req, res) => {
   const { campaignId, amount } = req.body;
-  const campaign = await Campagin.findById(campaignId);
+  const campaign = await Campaign.findById(campaignId);
 
   if (campaign) {
     if (campaign.state !== 'deployed') {
@@ -38,12 +38,23 @@ const fundCampaign = asyncHandler(async (req, res) => {
     }
 
     try {
+      const contributionList = await Campaign.find({
+        user: req.user._id,
+        campaign: campaign._id
+      });
+
+      if (contributionList.length > 0) {
+        campaign.contributors++;
+      }
+
+      campaign.pledged += amount;
+      campaign.save();
+
       const contribution = new Contribution({
         contributor: req.user._id,
         campaign: campaign._id,
         amount
       });
-
       const createdContribution = await contribution.save();
 
       res.status(201).json({
