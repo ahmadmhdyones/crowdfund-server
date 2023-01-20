@@ -68,7 +68,7 @@ const campaginSchema = new mongoose.Schema(
     goal: {
       type: Number,
       required: true,
-      min: [1, 'Should be greater than zero, got {VALUE}']
+      min: [0, 'Should be greater than zero, got {VALUE}']
     },
     pledged: {
       type: Number,
