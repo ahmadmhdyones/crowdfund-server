@@ -277,7 +277,7 @@ const finalizeCampaignRequest = asyncHandler(async (req, res) => {
       throw new Error(`Not allowed, campaign is already ${campaign.state}`);
     }
 
-    const result = req.body.amount;
+    const amount = req.body.amount;
     if (amount <= 0 || amount > campaign.pledged) {
       res.status(400);
       res.json({
