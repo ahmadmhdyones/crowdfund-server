@@ -261,6 +261,48 @@ const deployCampaign = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Update campagin balance (finalize request)
+// @route   PATCH /api/campaigns/deployed/:id/finalize
+// @access  Private
+const finalizeCampaignRequest = asyncHandler(async (req, res) => {
+  const campaign = await Campaign.findById(req.params.id);
+
+  if (campaign) {
+    if (campaign.state !== 'deployed') {
+      res.status(400);
+      res.json({
+        status: 'error',
+        message: `Not allowed, campaign is already ${campaign.state}`
+      });
+      throw new Error(`Not allowed, campaign is already ${campaign.state}`);
+    }
+
+    const result = req.body.amount;
+    if (amount <= 0 || amount > campaign.pledged) {
+      res.status(400);
+      res.json({
+        status: 'error',
+        message: 'amount must be greater than zero and campaign balance'
+      });
+      throw new Error('amount must be greater than zero and campaign balance');
+    }
+
+    try {
+      campaign.pledged -= amount;
+      const updatedCampaign = await campaign.save();
+      res.json({ status: 'success', data: { campaign: updatedCampaign } });
+    } catch (err) {
+      res.status(400);
+      res.json({ status: 'error', message: err.message });
+      throw new Error(err.message);
+    }
+  } else {
+    res.status(404);
+    res.json({ status: 'error', message: 'Campaign not found' });
+    throw new Error('Campaign not found');
+  }
+});
+
 export {
   addCampaign,
   getDeployedCampaigns,
@@ -271,5 +313,6 @@ export {
   getConsultationCampainById,
   updateCampaignApproval,
   getMyCampaigns,
-  deployCampaign
+  deployCampaign,
+  finalizeCampaignRequest
 };

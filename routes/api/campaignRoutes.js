@@ -9,7 +9,8 @@ import {
   getConsultationCampainById,
   updateCampaignApproval,
   getMyCampaigns,
-  deployCampaign
+  deployCampaign,
+  finalizeCampaignRequest
 } from '../../controllers/campaignController.js';
 import { protect, admin, consultant } from '../../middleware/authMiddleware.js';
 
@@ -26,6 +27,7 @@ router
   .route('/consultation/:id')
   .get(protect, consultant, getConsultationCampainById)
   .patch(protect, consultant, updateCampaignApproval);
+router.patch('/deployed/:id/finalize', protect, finalizeCampaignRequest);
 
 router.get('/mine', protect, getMyCampaigns);
 
