@@ -265,7 +265,7 @@ const deployCampaign = asyncHandler(async (req, res) => {
 // @route   PATCH /api/campaigns/deployed/:id/finalize
 // @access  Private
 const finalizeCampaignRequest = asyncHandler(async (req, res) => {
-  const campaign = await Campaign.findById(req.params.id);
+  const campaign = await Campaign.findOne({ address: req.body.address });
 
   if (campaign) {
     if (campaign.state !== 'deployed') {

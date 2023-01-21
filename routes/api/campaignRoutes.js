@@ -21,13 +21,13 @@ router
   .get(getDeployedCampaigns)
   .post(protect, deployCampaign);
 router.get('/deployed/:id', getDeployedCampaignById);
+router.patch('/deployed/requests/finalize', protect, finalizeCampaignRequest);
 
 router.get('/consultation', protect, consultant, getConsultationCampains);
 router
   .route('/consultation/:id')
   .get(protect, consultant, getConsultationCampainById)
   .patch(protect, consultant, updateCampaignApproval);
-router.patch('/deployed/:id/finalize', protect, finalizeCampaignRequest);
 
 router.get('/mine', protect, getMyCampaigns);
 
